@@ -1,0 +1,6 @@
+numpy
+opencv-python
+trimesh
+PyQt5
+moderngl
+transform3d
