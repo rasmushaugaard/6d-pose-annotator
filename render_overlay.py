@@ -118,7 +118,8 @@ class RenderOverlay(QtOpenGL.QGLWidget):
                 self.crop_mat @ self.image.camera.projection_matrix @ self.cam_t_model_gl.matrix
             )
             self.program['mv'].value = utils.to_uniform(self.cam_t_model_gl.matrix)
-
+            self.program['bb0'].value = utils.to_uniform(self.obj.mesh.bounds[0])
+            self.program['bb1'].value = utils.to_uniform(self.obj.mesh.bounds[1])
             # The below makes sure only the nearest faces are drawn (which matters with transparency)
             # first, populate the depth buffer without drawing
             # then only draw depth equal

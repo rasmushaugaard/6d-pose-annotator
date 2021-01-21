@@ -56,6 +56,8 @@ _model_vertex_shader = """
     uniform mat4 mvp;
     uniform mat4 mv;
     uniform float alpha;
+    uniform vec3 bb0;
+    uniform vec3 bb1;
     in vec3 in_vert;
     in vec3 in_norm;
     out vec3 v_vert_obj_norm;
@@ -65,11 +67,11 @@ _model_vertex_shader = """
     void main() {
         gl_Position = mvp * vec4(in_vert, 1.0);
         v_vert_cam = (mv * vec4(in_vert, 1.0)).xyz;
-        v_vert_obj_norm = in_vert * 5 + 0.5;
+        v_vert_obj_norm = (in_vert - bb0) / (bb1 - bb0);
         v_norm = mat3(mv) * in_norm;
         v_alpha = alpha;
     }
-"""  # TODO: add scale uniform and fix
+"""
 
 _model_fragment_shader = """
     #version 330
