@@ -31,7 +31,7 @@ class Image:
         self.close_listeners = set()
 
     @property
-    @lru_cache
+    @lru_cache(1)
     def img(self):
         return cv2.imread(self.file_path, cv2.IMREAD_COLOR)[..., ::-1].copy()
 
@@ -65,22 +65,22 @@ class Object:
             cb()
 
     @property
-    @lru_cache
+    @lru_cache(1)
     def mesh(self) -> trimesh.Trimesh:
         return trimesh.load_mesh(self.file_path)
 
     @property
-    @lru_cache
+    @lru_cache(1)
     def vert_norms(self):
         return utils.mesh_to_vertnorms(self.mesh)
 
     @property
-    @lru_cache
+    @lru_cache(1)
     def center(self):
         return self.mesh.bounding_sphere.primitive.center
 
     @property
-    @lru_cache
+    @lru_cache(1)
     def diameter(self):
         verts = self.mesh.convex_hull.vertices
         return np.linalg.norm(verts[None] - verts[:, None], axis=-1).max()

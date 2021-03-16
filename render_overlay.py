@@ -79,6 +79,7 @@ class RenderOverlay(QtOpenGL.QGLWidget):
 
     def initializeGL(self):
         self.ctx = moderngl.create_context()
+        self.ctx.viewport = (0, 0, self.size, self.size)
         h, w = self.image.img.shape[:2]
         self.tex = self.ctx.texture((w, h), 3, self.image.img.data)
         self.tex.use()
@@ -179,11 +180,10 @@ class RenderOverlay(QtOpenGL.QGLWidget):
         x, y = e.x(), e.y()
         if self.mode == Mode.CROP:
             crop = np.clip((np.array((self.crop_start, (x, y))) + 0.5) / self.size, 0, 1)
-            print(crop)
             if np.all(crop[0] == crop[1]):
                 self.reset_crop()
             else:
-                self.crop(crop * (2, -2) - 1)
+                self.crop(crop * (2, -2) + (-1, 1))
 
     def crop(self, crop):  # crop in ndc coordinates relative to current crop
         scale = 2 / np.abs(crop[0] - crop[1]).max()
