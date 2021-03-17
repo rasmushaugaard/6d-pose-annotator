@@ -53,10 +53,11 @@ class Image:
 
 
 class Object:
-    def __init__(self, name: str, file_path: str, pose: Transform = None):
+    def __init__(self, name: str, file_path: str, pose: Transform = None, scale=1.):
         self.name = name
         self.file_path = file_path
         self.pose = pose
+        self.scale = scale
         self.pose_listeners = set()
 
     def set_pose(self, pose: Transform):
@@ -67,7 +68,9 @@ class Object:
     @property
     @lru_cache(1)
     def mesh(self) -> trimesh.Trimesh:
-        return trimesh.load_mesh(self.file_path)
+        mesh = trimesh.load_mesh(self.file_path)
+        mesh.apply_scale(self.scale)
+        return mesh
 
     @property
     @lru_cache(1)
@@ -104,6 +107,7 @@ class Scene:
                 d['name'],
                 os.path.join(fp_dir, d['file_path']),
                 Transform.from_xyz_rotvec(d['pose']) if 'pose' in d else None,
+                d['scale'] if 'scale' in d else 1,
             ))
         images = []
         for d in data['images']:

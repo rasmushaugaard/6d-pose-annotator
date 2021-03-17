@@ -22,9 +22,10 @@ def projection_matrix_from_camera_matrix(camera_matrix, h, w, near=0.1, far=10):
     # http://ksimek.github.io/2013/06/03/calibrated_cameras_in_opengl/
     persp = np.zeros((4, 4))
     persp[:2, :3] = cvt_camera_matrix_cv_gl(camera_matrix[:2, :3])
+    persp[1, 2] *= -1
     persp[2, 2:] = near + far, near * far
     persp[3, 2] = -1
-    orth = orthographic_matrix(0, w, 0, h, near, far)
+    orth = orthographic_matrix(0, w, -h, 0, near, far)
     return orth @ persp
 
 
